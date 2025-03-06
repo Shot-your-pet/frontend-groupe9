@@ -1,21 +1,13 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { ReactKeycloakProvider } from '@react-keycloak/web';
-import keycloak from './keycloak';
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    {/* <ReactKeycloakProvider
-      authClient={keycloak}
-      initOptions={{
-        onLoad: 'login-required',
-        checkLoginIframe: false,
-        pkceMethod: 'S256'
-      }}
-    > */}
-      <App />
-    {/* </ReactKeycloakProvider> */}
-  </StrictMode>
+    // <StrictMode>
+    <ErrorBoundary>
+        <App/>
+    </ErrorBoundary>
+    // </StrictMode>
 );
