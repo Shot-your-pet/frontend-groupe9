@@ -7,6 +7,7 @@ import {HeartOutlined, HeartFilled} from '@ant-design/icons';
 import {PublicationDTO} from "../entity/PublicationDTO.ts";
 import {getDernierChallenge, getTimeline} from "../services/timelineService.tsx";
 import {ChallengeDTO} from "../entity/Challenge.ts";
+import {API_URL} from "../constantes.ts";
 
 
 const {Title, Text} = Typography;
@@ -113,7 +114,7 @@ const Timeline: React.FC = () => {
                             cover={
                                 <img
                                     alt={publication.description}
-                                    src={publication.photo}
+                                    src={API_URL + "/images/" + publication.photo}
                                     className="object-cover w-full h-64"
                                 />
                             }
