@@ -9,5 +9,14 @@
 <body>
 <div id="root"></div>
 <script src="/src/main.tsx" type="module"></script>
+<script>
+    window.RUNTIME_CONFIG = {
+        KEYCLOAK_URL: "VITE_KEYCLOAK_URL",
+        KEYCLOAK_REALM: "VITE_KEYCLOAK_REALM",
+        KEYCLOAK_CLIENT_ID: "VITE_KEYCLOAK_CLIENT_ID",
+        API_URL: "VITE_API_URL"
+    };
+</script>
+
 </body>
 </html>

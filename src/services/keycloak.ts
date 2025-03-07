@@ -1,12 +1,10 @@
 import Keycloak from 'keycloak-js';
-
-// Create a singleton instance
-
+import {KEYCLOAK_CLIENT_ID, KEYCLOAK_REALM, KEYCLOAK_URL} from "../constantes.ts";
 
 const keycloak = new Keycloak({
-    url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:9001/',
-    realm: import.meta.env.VITE_KEYCLOAK_REALM || 'ShotYourPet',
-    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'shotyourpet',
+    url: KEYCLOAK_URL,
+    realm: KEYCLOAK_REALM,
+    clientId: KEYCLOAK_CLIENT_ID
 });
 
 export default keycloak;

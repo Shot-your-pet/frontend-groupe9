@@ -26,7 +26,7 @@ export const savePhoto = async (photo: File): Promise<string> => {
         });
         return response.data.contenu.idPhoto;
     } catch (e) {
-        console.error("Erreur lors de la publication du post", e);
+        console.error("Erreur lors de l'enregistrement de l'image'", e);
         throw e;
     }
 }

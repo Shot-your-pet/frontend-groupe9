@@ -1,39 +1,52 @@
-import React, {useEffect, useState} from 'react';
-import {Avatar, Card, Typography, Button, Modal, Calendar} from 'antd';
-import {Settings, LogOut, Camera, X} from 'lucide-react';
+import React, {useEffect, useRef, useState} from 'react';
+import {Avatar, Card, Typography, Button, Calendar} from 'antd';
+import {Settings, LogOut, Camera} from 'lucide-react';
 import {motion} from 'framer-motion';
 import type {Dayjs} from 'dayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 import {useKeycloak} from "@react-keycloak/web";
-import {KeycloakProfile} from "keycloak-js";
+import {API_URL} from "../constantes.ts";
+import {ProfileDTO} from "../entity/ProfileDTO.tsx";
+import {getProfileUtilisateur, savePhoto} from "../services/profileService.tsx";
 
 const {Title, Text} = Typography;
 
 // Mock data for demonstration - replace with actual data from your backend
 const mockUserShots = {
-    '2024-03-10': {imageUrl: 'https://images.unsplash.com/photo-1522252234503-e356532cafd5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
-    '2024-03-15': {imageUrl: 'https://images.unsplash.com/photo-1547394765-185e1e68f34e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
-    '2024-03-20': {imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
+    '2025-03-10': {imageUrl: 'https://images.unsplash.com/photo-1522252234503-e356532cafd5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
+    '2025-03-15': {imageUrl: 'https://images.unsplash.com/photo-1547394765-185e1e68f34e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
+    '2025-03-20': {imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
 };
 
 dayjs.locale('fr');
 
 const Profile: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
-    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+    // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
-    const [userInfo, setUserInfo] = useState<KeycloakProfile>(null);
+    const [profile, setProfile] = useState<ProfileDTO>();
+    const [erreur, setErreur] = useState<string | null>();
+    const [loading, setLoading] = useState<boolean>(false);
     const {keycloak} = useKeycloak();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const loadProfile = async () => {
+        try {
+            const data: ProfileDTO = await getProfileUtilisateur();
+            setProfile(data);
+        } catch (err) {
+            console.log(err)
+            setErreur("Erreur lors de la récupération du profile");
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        if (keycloak.authenticated) {
-            keycloak.loadUserInfo().then(userInfo => {
-                setUserInfo(userInfo);
-            });
-        }
-    }, [keycloak]);
+        loadProfile();
+    }, [])
 
     const handleAccountSettings = () => {
         keycloak?.accountManagement();
@@ -44,7 +57,9 @@ const Profile: React.FC = () => {
     };
 
     const handleAvatarClick = () => {
-        setIsProfileModalOpen(true);
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
     };
 
     const handleImageClick = (imageUrl: string, date: string) => {
@@ -52,33 +67,20 @@ const Profile: React.FC = () => {
         setSelectedDate(date);
     };
 
-    const dateCellRender = (date: Dayjs) => {
-        const dateStr = date.format('YYYY-MM-DD');
-        const shot = mockUserShots[dateStr];
-
-        if (shot) {
-            return (
-                <div
-                    className="calendar-cell-with-image cursor-pointer"
-                    onClick={() => handleImageClick(shot.imageUrl, dateStr)}
-                    style={{
-                        '--bg-image': `url(${shot.imageUrl})`
-                    } as React.CSSProperties}
-                >
-                    <div className="relative z-10 w-full h-full flex items-center justify-center">
-            <span className="text-white font-bold text-lg drop-shadow-lg">
-              {date.format('D')}
-            </span>
-                    </div>
-                </div>
-            );
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files[0]) {
+            const file = files[0];
+            try {
+                // Appel de votre service pour mettre à jour la photo de profil
+                const newAvatar = await savePhoto(file);
+                // Par exemple, on met à jour le profile avec la nouvelle image
+                setProfile((prev) => prev ? {...prev, avatar: newAvatar} : prev);
+                console.log("Nouvelle photo de profil enregistrée :", newAvatar);
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour de la photo de profil", error);
+            }
         }
-
-        return (
-            <div className="w-full h-full min-h-[80px] flex items-center justify-center">
-                <span className="text-gray-500">{date.format('D')}</span>
-            </div>
-        );
     };
 
     return (
@@ -98,7 +100,7 @@ const Profile: React.FC = () => {
                     >
                         <Avatar
                             size={64}
-                            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=150&q=80"
+                            src={API_URL + "/images/" + profile?.avatar}
                         />
                         {isHovered && (
                             <div
@@ -109,9 +111,9 @@ const Profile: React.FC = () => {
                     </div>
                     <div className="flex-1">
                         <Title level={4} className="m-0">
-                            {userInfo ? userInfo.name : 'Chargement...'}
+                            {profile ? profile?.prenom + " " + profile?.nom.toUpperCase() : 'Chargement...'}
                         </Title>
-                        <Text className="text-gray-500">{userInfo ? userInfo.email : 'Chargement...'}</Text>
+                        <Text className="text-gray-500">{profile ? profile.pseudo : 'Chargement...'}</Text>
                     </div>
                 </div>
             </Card>
@@ -119,9 +121,39 @@ const Profile: React.FC = () => {
             <Card className="mb-4 relative z-10" title="Historique de participation">
                 <Calendar
                     fullscreen={false}
-                    cellRender={dateCellRender}
                     className="custom-calendar"
+                    fullCellRender={(value: Dayjs) => {
+                        const dateStr = value.format('YYYY-MM-DD');
+                        const shot = mockUserShots[dateStr];
+                        return (
+                            <div
+                                style={{
+                                    height: '100%',
+                                    position: 'relative',
+                                    backgroundImage: shot ? `url(${shot.imageUrl})` : undefined,
+                                    backgroundSize: 'cover',
+                                    // backgroundPosition: 'center',
+                                }}
+                            >
+                                {/* Vous pouvez choisir d'afficher le numéro du jour par exemple dans un overlay */}
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        bottom: 4,
+                                        right: 4,
+                                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                        padding: '2px 4px',
+                                        borderRadius: '4px',
+                                        fontSize: '12px',
+                                    }}
+                                >
+                                    {value.date()}
+                                </div>
+                            </div>
+                        );
+                    }}
                 />
+
             </Card>
 
             <div className="space-y-4">
@@ -144,48 +176,56 @@ const Profile: React.FC = () => {
                 </Button>
             </div>
 
-            <Modal
-                title="Changer votre photo de profil"
-                open={isProfileModalOpen}
-                onCancel={() => setIsProfileModalOpen(false)}
-                footer={null}
-            >
-                <p>Pour changer votre photo de profil, rendez-vous dans les paramètres de votre compte.</p>
-                <div className="mt-4 flex justify-end">
-                    <Button type="primary" onClick={handleAccountSettings}>
-                        Aller aux paramètres
-                    </Button>
-                </div>
-            </Modal>
+            <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                style={{display: 'none'}}
+                onChange={handleFileChange}
+            />
 
-            <Modal
-                open={!!selectedImage}
-                onCancel={() => {
-                    setSelectedImage(null);
-                    setSelectedDate(null);
-                }}
-                footer={null}
-                width={800}
-                className="shot-preview-modal"
-                closeIcon={<X className="text-white"/>}
-            >
-                <div className="relative">
-                    {selectedImage && (
-                        <>
-                            <img
-                                src={selectedImage}
-                                alt={`Photo du ${selectedDate}`}
-                                className="w-full rounded-lg"
-                            />
-                            <div className="absolute top-4 left-4">
-                                <Text className="text-white text-lg font-semibold drop-shadow-lg">
-                                    {selectedDate && dayjs(selectedDate).format('DD MMMM YYYY')}
-                                </Text>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </Modal>
+            {/*<Modal*/}
+            {/*    title="Changer votre photo de profil"*/}
+            {/*    open={isProfileModalOpen}*/}
+            {/*    onCancel={() => setIsProfileModalOpen(false)}*/}
+            {/*    footer={null}*/}
+            {/*>*/}
+            {/*    <p>Pour changer votre photo de profil, rendez-vous dans les paramètres de votre compte.</p>*/}
+            {/*    <div className="mt-4 flex justify-end">*/}
+            {/*        <Button type="primary" onClick={handleAccountSettings}>*/}
+            {/*            Aller aux paramètres*/}
+            {/*        </Button>*/}
+            {/*    </div>*/}
+            {/*</Modal>*/}
+
+            {/*<Modal*/}
+            {/*    open={!!selectedImage}*/}
+            {/*    onCancel={() => {*/}
+            {/*        setSelectedImage(null);*/}
+            {/*        setSelectedDate(null);*/}
+            {/*    }}*/}
+            {/*    footer={null}*/}
+            {/*    width={800}*/}
+            {/*    className="shot-preview-modal"*/}
+            {/*    closeIcon={<X className="text-white"/>}*/}
+            {/*>*/}
+            {/*    <div className="relative">*/}
+            {/*        {selectedImage && (*/}
+            {/*            <>*/}
+            {/*                <img*/}
+            {/*                    src={selectedImage}*/}
+            {/*                    alt={`Photo du ${selectedDate}`}*/}
+            {/*                    className="w-full rounded-lg"*/}
+            {/*                />*/}
+            {/*                <div className="absolute top-4 left-4">*/}
+            {/*                    <Text className="text-white text-lg font-semibold drop-shadow-lg">*/}
+            {/*                        {selectedDate && dayjs(selectedDate).format('DD MMMM YYYY')}*/}
+            {/*                    </Text>*/}
+            {/*                </div>*/}
+            {/*            </>*/}
+            {/*        )}*/}
+            {/*    </div>*/}
+            {/*</Modal>*/}
         </motion.div>
     );
 };

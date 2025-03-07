@@ -22,6 +22,7 @@ const Shooter: React.FC = () => {
     const [erreur, setErreur] = useState<string | null>();
     const [loadingCreationPublication, setLoadingCreationPublication] = useState<boolean>(false);
     const [loadingEnvoiePhoto, setLoadingEnvoiePhoto] = useState<boolean>(false);
+    const [loadingChallenge, setLoadingChallenge] = useState<boolean>(false);
 
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot();
@@ -38,7 +39,7 @@ const Shooter: React.FC = () => {
             console.log(err)
             setErreur("Erreur lors de la récupération du challenge");
         } finally {
-            setLoading(false);
+            setLoadingChallenge(false);
         }
     }
 
