@@ -1,7 +1,8 @@
 import axios from 'axios';
+import {API_URL} from "../constantes.ts";
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080', // Remplacez par l'URL de votre API
+    baseURL: API_URL, // Remplacez par l'URL de votre API
     headers: {
         'Content-Type': 'application/json',
     },
