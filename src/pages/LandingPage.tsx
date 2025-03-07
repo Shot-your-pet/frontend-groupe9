@@ -23,13 +23,13 @@ const LandingPage: React.FC = () => {
             exit={{opacity: 0}}
             className="min-h-screen bg-gradient-to-b from-green-400 to-blue-500 flex flex-col items-center justify-center p-4"
         >
-            <div className="text-center">
-                <Camera size={64} className="text-white mb-6"/>
+            <div className="flex justify-center items-center flex-col">
+                <Camera size={64} className="text-white mb-6 "/>
                 <Title level={1} className="!text-white mb-2">
-                    BeReal Clone
+                    Shot Your Pet
                 </Title>
                 <Text className="text-white text-lg mb-8 block">
-                    Partagez vos moments authentiques avec vos amis
+                    Capture ton ou tes animaux selon le challenge du jour, et partage avec le avec le monde entier
                 </Text>
                 <Button
                     type="primary"
@@ -37,7 +37,7 @@ const LandingPage: React.FC = () => {
                     onClick={() => keycloak.login()}
                     className="bg-white text-green-500 hover:bg-green-50 border-none"
                 >
-                    Commencer l'aventure
+                    Commencer à shooter
                 </Button>
             </div>
         </motion.div>

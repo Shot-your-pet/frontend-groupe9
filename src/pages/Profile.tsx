@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Avatar, Card, Typography, Button, Calendar} from 'antd';
-import {Settings, LogOut, Camera} from 'lucide-react';
+import {Avatar, Card, Typography, Button, Calendar, Modal} from 'antd';
+import {Settings, LogOut, Camera, X} from 'lucide-react';
 import {motion} from 'framer-motion';
 import type {Dayjs} from 'dayjs';
 import dayjs from 'dayjs';
@@ -8,27 +8,24 @@ import 'dayjs/locale/fr';
 import {useKeycloak} from "@react-keycloak/web";
 import {API_URL} from "../constantes.ts";
 import {ProfileDTO} from "../entity/ProfileDTO.tsx";
-import {getProfileUtilisateur, savePhoto} from "../services/profileService.tsx";
+import {getHistoriqueParticipation, getProfileUtilisateur, savePhoto} from "../services/profileService.tsx";
+import {SimplePublicationDTO} from "../entity/SimplePublicationDTO.ts";
+import {HeartFilled} from "@ant-design/icons";
 
 const {Title, Text} = Typography;
 
 // Mock data for demonstration - replace with actual data from your backend
-const mockUserShots = {
-    '2025-03-10': {imageUrl: 'https://images.unsplash.com/photo-1522252234503-e356532cafd5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
-    '2025-03-15': {imageUrl: 'https://images.unsplash.com/photo-1547394765-185e1e68f34e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
-    '2025-03-20': {imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80'},
-};
 
 dayjs.locale('fr');
 
 const Profile: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [selectedPublication, setSelectedPublication] = useState<SimplePublicationDTO | null>(null);
     const [profile, setProfile] = useState<ProfileDTO>();
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
+    const [publications, setPublications] = useState<SimplePublicationDTO[]>([]);
     const {keycloak} = useKeycloak();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,8 +41,21 @@ const Profile: React.FC = () => {
         }
     }
 
+    const loadHistoriquePublication = async () => {
+        try {
+            const data: SimplePublicationDTO[] = await getHistoriqueParticipation();
+            setPublications(data);
+        } catch (err) {
+            console.log(err)
+            setErreur("Erreur lors de la récupération de l'historique de participation");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         loadProfile();
+        loadHistoriquePublication();
     }, [])
 
     const handleAccountSettings = () => {
@@ -60,11 +70,6 @@ const Profile: React.FC = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
-    };
-
-    const handleImageClick = (imageUrl: string, date: string) => {
-        setSelectedImage(imageUrl);
-        setSelectedDate(date);
     };
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,15 +129,17 @@ const Profile: React.FC = () => {
                     className="custom-calendar"
                     fullCellRender={(value: Dayjs) => {
                         const dateStr = value.format('YYYY-MM-DD');
-                        const shot = mockUserShots[dateStr];
+                        const shot = publications.filter(p => dayjs(p.datePublication).format('YYYY-MM-DD') === dateStr)[0];
                         return (
                             <div
+                                onClick={() => setSelectedPublication(shot)}
                                 style={{
                                     height: '100%',
                                     position: 'relative',
-                                    backgroundImage: shot ? `url(${shot.imageUrl})` : undefined,
+                                    backgroundImage: shot ? `url(${API_URL + "/images/" + shot.image})` : undefined,
                                     backgroundSize: 'cover',
-                                    // backgroundPosition: 'center',
+                                    aspectRatio: '1/1',
+                                    backgroundPosition: 'center',
                                 }}
                             >
                                 {/* Vous pouvez choisir d'afficher le numéro du jour par exemple dans un overlay */}
@@ -198,34 +205,44 @@ const Profile: React.FC = () => {
             {/*    </div>*/}
             {/*</Modal>*/}
 
-            {/*<Modal*/}
-            {/*    open={!!selectedImage}*/}
-            {/*    onCancel={() => {*/}
-            {/*        setSelectedImage(null);*/}
-            {/*        setSelectedDate(null);*/}
-            {/*    }}*/}
-            {/*    footer={null}*/}
-            {/*    width={800}*/}
-            {/*    className="shot-preview-modal"*/}
-            {/*    closeIcon={<X className="text-white"/>}*/}
-            {/*>*/}
-            {/*    <div className="relative">*/}
-            {/*        {selectedImage && (*/}
-            {/*            <>*/}
-            {/*                <img*/}
-            {/*                    src={selectedImage}*/}
-            {/*                    alt={`Photo du ${selectedDate}`}*/}
-            {/*                    className="w-full rounded-lg"*/}
-            {/*                />*/}
-            {/*                <div className="absolute top-4 left-4">*/}
-            {/*                    <Text className="text-white text-lg font-semibold drop-shadow-lg">*/}
-            {/*                        {selectedDate && dayjs(selectedDate).format('DD MMMM YYYY')}*/}
-            {/*                    </Text>*/}
-            {/*                </div>*/}
-            {/*            </>*/}
-            {/*        )}*/}
-            {/*    </div>*/}
-            {/*</Modal>*/}
+            <Modal
+                open={!!selectedPublication}
+                onCancel={() => {
+                    setSelectedPublication(null);
+                }}
+                footer={null}
+                width={800}
+                className="shot-preview-modal"
+                closeIcon={<X className="text-white"/>}
+            >
+                <div className="relative">
+                    {selectedPublication && (
+                        <>
+                            <img
+                                src={API_URL + "/images/" + selectedPublication.image}
+                                alt={`Photo du ${selectedPublication.datePublication}`}
+                                className="w-full rounded-lg"
+                            />
+                            <div className="absolute top-4 left-4">
+                                <Text className="text-white text-lg font-semibold drop-shadow-lg">
+                                    {selectedPublication && dayjs(selectedPublication.datePublication).format('DD MMMM YYYY')}
+                                </Text>
+                            </div>
+                            <div className="absolute bottom-14 right-4">
+                                <Text className="text-white text-lg font-semibold drop-shadow-lg">
+                                    {selectedPublication && selectedPublication.nombreLike > 0 &&
+                                        <>{selectedPublication.nombreLike} <HeartFilled className="text-red-500"/></>}
+                                </Text>
+                            </div>
+                            <div className="mt-3">
+                                <Text className="text-black text-lg font-semibold drop-shadow-lg">
+                                    {selectedPublication && selectedPublication.description}
+                                </Text>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </Modal>
         </motion.div>
     );
 };
