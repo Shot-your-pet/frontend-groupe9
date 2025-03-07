@@ -23,7 +23,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Remplace la configuration Nginx par défaut si nécessaire
-# COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
