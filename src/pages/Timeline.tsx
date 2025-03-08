@@ -8,6 +8,7 @@ import {PublicationDTO} from "../entity/PublicationDTO.ts";
 import {getDernierChallenge, getTimeline} from "../services/timelineService.tsx";
 import {ChallengeDTO} from "../entity/Challenge.ts";
 import {API_URL} from "../constantes.ts";
+import {useKeycloak} from "@react-keycloak/web";
 
 
 const {Title, Text} = Typography;
@@ -23,16 +24,18 @@ interface Post {
 
 const Timeline: React.FC = () => {
     const navigate = useNavigate();
-    const todayChallenge = "Montrez votre espace de travail !";
-
     const [publications, setPublications] = useState<PublicationDTO[]>([]);
     const [challenge, setChallenge] = useState<ChallengeDTO | undefined>();
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
+    const {keycloak} = useKeycloak();
 
     const loadTimeline = async () => {
+        if (!keycloak.token) {
+            return;
+        }
         try {
-            const data: PublicationDTO[] = await getTimeline();
+            const data: PublicationDTO[] = await getTimeline(keycloak.token);
             setPublications(data);
         } catch (err) {
             console.log(err)
@@ -43,8 +46,11 @@ const Timeline: React.FC = () => {
     }
 
     const loadChallenge = async () => {
+        if (!keycloak.token) {
+            return
+        }
         try {
-            const data: ChallengeDTO = await getDernierChallenge();
+            const data: ChallengeDTO = await getDernierChallenge(keycloak.token);
             setChallenge(data);
         } catch (err) {
             console.log(err)
@@ -52,6 +58,7 @@ const Timeline: React.FC = () => {
         } finally {
             setLoading(false);
         }
+
     }
 
     useEffect(() => {

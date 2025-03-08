@@ -2,10 +2,11 @@ import apiClient from "./api.ts";
 import {ReponseAPI} from "./ReponseAPI.ts";
 import {ProfileDTO} from "../entity/ProfileDTO.tsx";
 import {SimplePublicationDTO} from "../entity/SimplePublicationDTO.ts";
+import {IdPhotoDTO} from "../entity/IdPhotoDTO.ts";
 
-export const getProfileUtilisateur = async (): Promise<ProfileDTO> => {
+export const getProfileUtilisateur = async (token?: string): Promise<ProfileDTO> => {
     try {
-        const response = await apiClient.get<ReponseAPI<ProfileDTO>>("/profile");
+        const response = await apiClient(token).get<ReponseAPI<ProfileDTO>>("/profile");
         return response.data.contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération du profile", e);
@@ -13,15 +14,11 @@ export const getProfileUtilisateur = async (): Promise<ProfileDTO> => {
     }
 }
 
-interface IdPhotoDTO {
-    idPhoto: string
-}
-
-export const savePhoto = async (avatar: File): Promise<string> => {
+export const savePhoto = async (avatar: File, token?: string): Promise<string> => {
     try {
         const formData = new FormData();
         formData.append("file", avatar);
-        const response = await apiClient.post<ReponseAPI<IdPhotoDTO>>("/upload", formData, {
+        const response = await apiClient(token).post<ReponseAPI<IdPhotoDTO>>("/images/upload", formData, {
             params: {
                 "type": "AVATAR"
             },
@@ -36,9 +33,9 @@ export const savePhoto = async (avatar: File): Promise<string> => {
     }
 }
 
-export const getHistoriqueParticipation = async (): Promise<SimplePublicationDTO[]> => {
+export const getHistoriqueParticipation = async (token?: string): Promise<SimplePublicationDTO[]> => {
     try {
-        const response = await apiClient.get<ReponseAPI<SimplePublicationDTO[]>>("/profile/participations");
+        const response = await apiClient(token).get<ReponseAPI<SimplePublicationDTO[]>>("/profile/participations");
         return response.data.contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération de l'historique de participation de l'utilisateur", e);

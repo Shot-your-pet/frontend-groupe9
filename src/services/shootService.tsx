@@ -1,10 +1,11 @@
 import apiClient from "./api.ts";
 import {ReponseAPI} from "./ReponseAPI.ts";
 import {CreerPublicationDTO} from "../entity/CreerPublicationDTO.ts";
+import {IdPhotoDTO} from "../entity/IdPhotoDTO.ts";
 
-export const posterPublication = async (creerPublication: CreerPublicationDTO): Promise<boolean> => {
+export const posterPublication = async (creerPublication: CreerPublicationDTO, token?: string): Promise<boolean> => {
     try {
-        const response = await apiClient.post<ReponseAPI<void>>("/publications", creerPublication);
+        const response = await apiClient(token).post<ReponseAPI<void>>("/publications", creerPublication);
         return !!response.data;
     } catch (e) {
         console.error("Erreur lors de la publication du post", e);
@@ -12,11 +13,11 @@ export const posterPublication = async (creerPublication: CreerPublicationDTO): 
     }
 }
 
-export const savePhoto = async (photo: File): Promise<string> => {
+export const savePhoto = async (photo: File, token?: string): Promise<string> => {
     try {
         const formData = new FormData();
         formData.append("file", photo);
-        const response = await apiClient.post<ReponseAPI<void>>("/upload", formData, {
+        const response = await apiClient(token).post<ReponseAPI<IdPhotoDTO>>("/images/upload", formData, {
             params: {
                 "type": "PUBLICATION"
             },

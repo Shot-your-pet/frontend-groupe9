@@ -31,7 +31,7 @@ const Profile: React.FC = () => {
 
     const loadProfile = async () => {
         try {
-            const data: ProfileDTO = await getProfileUtilisateur();
+            const data: ProfileDTO = await getProfileUtilisateur(keycloak.token);
             setProfile(data);
         } catch (err) {
             console.log(err)
@@ -43,7 +43,7 @@ const Profile: React.FC = () => {
 
     const loadHistoriquePublication = async () => {
         try {
-            const data: SimplePublicationDTO[] = await getHistoriqueParticipation();
+            const data: SimplePublicationDTO[] = await getHistoriqueParticipation(keycloak.token);
             setPublications(data);
         } catch (err) {
             console.log(err)
@@ -78,7 +78,7 @@ const Profile: React.FC = () => {
             const file = files[0];
             try {
                 // Appel de votre service pour mettre à jour la photo de profil
-                const newAvatar = await savePhoto(file);
+                const newAvatar = await savePhoto(file, keycloak.token);
                 // Par exemple, on met à jour le profile avec la nouvelle image
                 setProfile((prev) => prev ? {...prev, avatar: newAvatar} : prev);
                 console.log("Nouvelle photo de profil enregistrée :", newAvatar);
@@ -123,6 +123,12 @@ const Profile: React.FC = () => {
                 </div>
             </Card>
 
+            {erreur && (
+                <Card className="mb-4" title="Erreur">
+                    <Text type="danger">{erreur}</Text>
+                </Card>
+            )}
+            {loading && <p>Loaging ...</p>}
             <Card className="mb-4 relative z-10" title="Historique de participation">
                 <Calendar
                     fullscreen={false}

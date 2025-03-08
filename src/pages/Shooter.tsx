@@ -8,6 +8,7 @@ import {posterPublication, savePhoto} from "../services/shootService.tsx";
 import {CreerPublicationDTO} from "../entity/CreerPublicationDTO.ts";
 import {ChallengeDTO} from "../entity/Challenge.ts";
 import {getDernierChallenge} from "../services/timelineService.tsx";
+import {useKeycloak} from "@react-keycloak/web";
 
 const {Title, Text} = Typography;
 const {TextArea} = Input;
@@ -23,6 +24,7 @@ const Shooter: React.FC = () => {
     const [loadingCreationPublication, setLoadingCreationPublication] = useState<boolean>(false);
     const [loadingEnvoiePhoto, setLoadingEnvoiePhoto] = useState<boolean>(false);
     const [loadingChallenge, setLoadingChallenge] = useState<boolean>(false);
+    const {keycloak} = useKeycloak();
 
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot();
@@ -33,7 +35,7 @@ const Shooter: React.FC = () => {
 
     const loadChallenge = async () => {
         try {
-            const data: ChallengeDTO = await getDernierChallenge();
+            const data: ChallengeDTO = await getDernierChallenge(keycloak.token);
             setChallenge(data);
         } catch (err) {
             console.log(err)
@@ -56,7 +58,7 @@ const Shooter: React.FC = () => {
                     const response = await fetch(photo);
                     const blob = await response.blob();
                     const file = new File([blob], 'photo.jpg', {type: 'image/jpeg'});
-                    idPhotoPrise = await savePhoto(file);
+                    idPhotoPrise = await savePhoto(file, keycloak.token);
                     setIdPhoto(idPhotoPrise);
                 }
                 setLoadingEnvoiePhoto(false);
@@ -67,7 +69,7 @@ const Shooter: React.FC = () => {
                         datePublication: new Date().toISOString(),
                         description: description
                     }
-                    const success = await posterPublication(creerPublication);
+                    const success = await posterPublication(creerPublication, keycloak.token);
                     if (success) {
                         setIdPhoto(undefined);
                         setLoadingCreationPublication(false)
