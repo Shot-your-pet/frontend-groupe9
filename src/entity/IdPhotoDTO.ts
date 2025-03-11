@@ -1,3 +1,3 @@
 export interface IdPhotoDTO {
-    idPhoto: string
+    idPhoto: number
 }

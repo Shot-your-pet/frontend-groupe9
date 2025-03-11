@@ -1,5 +1,5 @@
 export interface CreerPublicationDTO {
-    "idPhoto": string
+    "idPhoto": number
     "description": string
     "datePublication": string
 }

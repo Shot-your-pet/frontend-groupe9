@@ -3,7 +3,7 @@ export interface PublicationDTO {
     datePublication: Date | undefined
     description: string
     auteur: string
-    photo: string
+    photo: number
     nombreLikes: number
     likeUtilisateur: boolean
 }
