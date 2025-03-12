@@ -6,7 +6,7 @@ import {IdPhotoDTO} from "../entity/IdPhotoDTO.ts";
 
 export const getProfileUtilisateur = async (token?: string): Promise<ProfileDTO> => {
     try {
-        const response = await apiClient(token).get<ReponseAPI<ProfileDTO>>("/profile");
+        const response = await apiClient(token).get<ReponseAPI<ProfileDTO>>("/utilisateurs/profile");
         return response.data.contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération du profile", e);
@@ -14,7 +14,7 @@ export const getProfileUtilisateur = async (token?: string): Promise<ProfileDTO>
     }
 }
 
-export const savePhoto = async (avatar: File, token?: string): Promise<string> => {
+export const savePhoto = async (avatar: File, token?: string): Promise<number> => {
     try {
         const formData = new FormData();
         formData.append("file", avatar);
