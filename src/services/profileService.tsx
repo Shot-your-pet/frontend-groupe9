@@ -35,8 +35,10 @@ export const savePhoto = async (avatar: File, token?: string): Promise<number> =
 
 export const getHistoriqueParticipation = async (token?: string): Promise<SimplePublicationDTO[]> => {
     try {
-        const response = await apiClient(token).get<ReponseAPI<SimplePublicationDTO[]>>("/profile/participations");
-        return response.data.contenu;
+        const response = await apiClient(token).get<ReponseAPI<SimplePublicationDTO[]>>("/utilisateurs/profile/participations");
+        const contenu = response.data.contenu;
+
+        return contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération de l'historique de participation de l'utilisateur", e);
         throw e;

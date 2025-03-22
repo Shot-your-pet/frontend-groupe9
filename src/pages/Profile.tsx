@@ -130,42 +130,42 @@ const Profile: React.FC = () => {
             )}
             {loading && <p>Loaging ...</p>}
             <Card className="mb-4 relative z-10" title="Historique de participation">
-                <Calendar
-                    fullscreen={false}
-                    className="custom-calendar"
-                    fullCellRender={(value: Dayjs) => {
-                        const dateStr = value.format('YYYY-MM-DD');
-                        const shot = publications.filter(p => dayjs(p.datePublication).format('YYYY-MM-DD') === dateStr)[0];
-                        return (
-                            <div
-                                onClick={() => setSelectedPublication(shot)}
-                                style={{
-                                    height: '100%',
-                                    position: 'relative',
-                                    backgroundImage: shot ? `url(${API_URL + "/images/" + shot.image})` : undefined,
-                                    backgroundSize: 'cover',
-                                    aspectRatio: '1/1',
-                                    backgroundPosition: 'center',
-                                }}
-                            >
-                                {/* Vous pouvez choisir d'afficher le numéro du jour par exemple dans un overlay */}
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: 4,
-                                        right: 4,
-                                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                                        padding: '2px 4px',
-                                        borderRadius: '4px',
-                                        fontSize: '12px',
-                                    }}
-                                >
-                                    {value.date()}
-                                </div>
-                            </div>
-                        );
-                    }}
-                />
+                {/*<Calendar*/}
+                {/*    fullscreen={false}*/}
+                {/*    className="custom-calendar"*/}
+                {/*    fullCellRender={(value: Dayjs) => {*/}
+                {/*        const dateStr = value.format('YYYY-MM-DD');*/}
+                {/*        const shot = publications.filter(p => dayjs(p.datePublication).format('YYYY-MM-DD') === dateStr)[0];*/}
+                {/*        return (*/}
+                {/*            <div*/}
+                {/*                onClick={() => setSelectedPublication(shot)}*/}
+                {/*                style={{*/}
+                {/*                    height: '100%',*/}
+                {/*                    position: 'relative',*/}
+                {/*                    backgroundImage: shot ? `url(${API_URL + "/images/" + shot.image})` : undefined,*/}
+                {/*                    backgroundSize: 'cover',*/}
+                {/*                    aspectRatio: '1/1',*/}
+                {/*                    backgroundPosition: 'center',*/}
+                {/*                }}*/}
+                {/*            >*/}
+                {/*                /!* Vous pouvez choisir d'afficher le numéro du jour par exemple dans un overlay *!/*/}
+                {/*                <div*/}
+                {/*                    style={{*/}
+                {/*                        position: 'absolute',*/}
+                {/*                        bottom: 4,*/}
+                {/*                        right: 4,*/}
+                {/*                        backgroundColor: 'rgba(255, 255, 255, 0.7)',*/}
+                {/*                        padding: '2px 4px',*/}
+                {/*                        borderRadius: '4px',*/}
+                {/*                        fontSize: '12px',*/}
+                {/*                    }}*/}
+                {/*                >*/}
+                {/*                    {value.date()}*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        );*/}
+                {/*    }}*/}
+                {/*/>*/}
 
             </Card>
 

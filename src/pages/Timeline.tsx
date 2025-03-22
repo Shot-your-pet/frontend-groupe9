@@ -93,7 +93,7 @@ const Timeline: React.FC = () => {
                         <Title level={4} className="!text-white m-0">
                             Challenge du jour
                         </Title>
-                        <Text className="text-white">{challenge?.intitule}</Text>
+                        <Text className="text-white">{challenge?.titre} - {challenge?.description}</Text>
                     </div>
                     <Button
                         type="primary"

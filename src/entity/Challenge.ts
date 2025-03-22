@@ -1,6 +1,7 @@
 export interface ChallengeDTO {
     id: string,
-    intitule: string,
+    titre: string,
+    description: string,
     dateDebut?: Date,
     dateFin?: Date,
 }

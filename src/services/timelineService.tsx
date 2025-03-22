@@ -17,7 +17,7 @@ export const getTimeline = async (token?: string): Promise<PublicationDTO[]> => 
 
 export const getDernierChallenge = async (token?: string): Promise<ChallengeDTO> => {
     try {
-        const response = await apiClient(token).get<ReponseAPI<ChallengeDTO>>("/challenge");
+        const response = await apiClient(token).get<ReponseAPI<ChallengeDTO>>("/challenges/today");
         return response.data.contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération du dernier challenge", e);
