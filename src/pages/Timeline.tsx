@@ -6,7 +6,7 @@ import {motion} from 'framer-motion';
 import {HeartOutlined, HeartFilled} from '@ant-design/icons';
 import {PublicationDTO} from "../entity/PublicationDTO.ts";
 import {getDernierChallenge, getTimeline} from "../services/timelineService.tsx";
-import {ChallengeDTO} from "../entity/Challenge.ts";
+import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
 import {API_URL} from "../constantes.ts";
 import {useKeycloak} from "@react-keycloak/web";
 
@@ -25,7 +25,7 @@ interface Post {
 const Timeline: React.FC = () => {
     const navigate = useNavigate();
     const [publications, setPublications] = useState<PublicationDTO[]>([]);
-    const [challenge, setChallenge] = useState<ChallengeDTO | undefined>();
+    const [challengeHistorique, setChallengeHistorique] = useState<ChallengeHistoriqueDTO | undefined>();
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
     const {keycloak} = useKeycloak();
@@ -50,8 +50,8 @@ const Timeline: React.FC = () => {
             return
         }
         try {
-            const data: ChallengeDTO = await getDernierChallenge(keycloak.token);
-            setChallenge(data);
+            const data: ChallengeHistoriqueDTO = await getDernierChallenge(keycloak.token);
+            setChallengeHistorique(data);
         } catch (err) {
             console.log(err)
             setErreur("Erreur lors de la récupération du challenge");
@@ -93,7 +93,8 @@ const Timeline: React.FC = () => {
                         <Title level={4} className="!text-white m-0">
                             Challenge du jour
                         </Title>
-                        <Text className="text-white">{challenge?.titre} - {challenge?.description}</Text>
+                        <Text
+                            className="text-white">{challengeHistorique?.challenge?.titre} - {challengeHistorique?.challenge?.description}</Text>
                     </div>
                     <Button
                         type="primary"

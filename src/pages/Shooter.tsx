@@ -6,20 +6,20 @@ import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {posterPublication, savePhoto} from "../services/shootService.tsx";
 import {CreerPublicationDTO} from "../entity/CreerPublicationDTO.ts";
-import {ChallengeDTO} from "../entity/Challenge.ts";
+import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
 import {getDernierChallenge} from "../services/timelineService.tsx";
 import {useKeycloak} from "@react-keycloak/web";
 
-const {Title, Text} = Typography;
+const {Text} = Typography;
 const {TextArea} = Input;
 
 const Shooter: React.FC = () => {
     const navigate = useNavigate();
     const [photo, setPhoto] = useState<string | null>(null);
-    const [idPhoto, setIdPhoto] = useState<string | undefined>(undefined);
+    const [idPhoto, setIdPhoto] = useState<number | undefined>(undefined);
     const [description, setDescription] = useState('');
     const webcamRef = React.useRef<Webcam>(null);
-    const [challenge, setChallenge] = useState<ChallengeDTO | undefined>();
+    const [challengeHistorique, setChallengeHistorique] = useState<ChallengeHistoriqueDTO | undefined>();
     const [erreur, setErreur] = useState<string | null>();
     const [loadingCreationPublication, setLoadingCreationPublication] = useState<boolean>(false);
     const [loadingEnvoiePhoto, setLoadingEnvoiePhoto] = useState<boolean>(false);
@@ -35,8 +35,8 @@ const Shooter: React.FC = () => {
 
     const loadChallenge = async () => {
         try {
-            const data: ChallengeDTO = await getDernierChallenge(keycloak.token);
-            setChallenge(data);
+            const data: ChallengeHistoriqueDTO = await getDernierChallenge(keycloak.token);
+            setChallengeHistorique(data);
         } catch (err) {
             console.log(err)
             setErreur("Erreur lors de la récupération du challenge");
@@ -110,7 +110,8 @@ const Shooter: React.FC = () => {
 
                         <div
                             className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
-                            <Text className="text-white mb-4 block">{challenge?.intitule}</Text>
+                            <Text
+                                className="text-white mb-4 block">{challengeHistorique?.challenge?.titre} - {challengeHistorique?.challenge?.description}</Text>
                             <Button
                                 type="primary"
                                 size="large"

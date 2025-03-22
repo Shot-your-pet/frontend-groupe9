@@ -2,7 +2,7 @@ import apiClient from "./api.ts";
 import {PublicationDTO} from "../entity/PublicationDTO.ts";
 import {ReponseAPI} from "./ReponseAPI.ts";
 import {TimelineDTO} from "../entity/TimelineDTO.ts";
-import {ChallengeDTO} from "../entity/Challenge.ts";
+import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
 
 export const getTimeline = async (token?: string): Promise<PublicationDTO[]> => {
     try {
@@ -15,9 +15,9 @@ export const getTimeline = async (token?: string): Promise<PublicationDTO[]> => 
 }
 
 
-export const getDernierChallenge = async (token?: string): Promise<ChallengeDTO> => {
+export const getDernierChallenge = async (token?: string): Promise<ChallengeHistoriqueDTO> => {
     try {
-        const response = await apiClient(token).get<ReponseAPI<ChallengeDTO>>("/challenges/today");
+        const response = await apiClient(token).get<ReponseAPI<ChallengeHistoriqueDTO>>("/challenges/today");
         return response.data.contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération du dernier challenge", e);
