@@ -1,6 +1,9 @@
 import {PublicationDTO} from "./PublicationDTO.ts";
 
 export interface TimelineDTO {
-    actualiseLe: Date | undefined
-    publications: PublicationDTO[]
+    size: number
+    total_size: number
+    next_cursor?: number
+    content: PublicationDTO[]
 }
+

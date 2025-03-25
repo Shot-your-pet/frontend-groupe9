@@ -1,13 +1,12 @@
 import apiClient from "./api.ts";
-import {PublicationDTO} from "../entity/PublicationDTO.ts";
 import {ReponseAPI} from "./ReponseAPI.ts";
 import {TimelineDTO} from "../entity/TimelineDTO.ts";
 import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
 
-export const getTimeline = async (token?: string): Promise<PublicationDTO[]> => {
+export const getTimeline = async (token?: string): Promise<TimelineDTO> => {
     try {
-        const response = await apiClient(token).get<ReponseAPI<TimelineDTO>>("/timeline");
-        return response.data.contenu.publications;
+        const response = await apiClient(token).get<TimelineDTO>("/timeline");
+        return response.data;
     } catch (e) {
         console.error("Erreur lors de la récupération de la timeline", e);
         throw e;

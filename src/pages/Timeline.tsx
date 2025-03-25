@@ -9,22 +9,15 @@ import {getDernierChallenge, getTimeline} from "../services/timelineService.tsx"
 import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
 import {API_URL} from "../constantes.ts";
 import {useKeycloak} from "@react-keycloak/web";
+import {TimelineDTO} from "../entity/TimelineDTO.ts";
 
 
 const {Title, Text} = Typography;
 
-interface Post {
-    id: string;
-    imageUrl: string;
-    description: string;
-    author: string;
-    likes: number;
-    isLiked: boolean;
-}
-
 const Timeline: React.FC = () => {
     const navigate = useNavigate();
     const [publications, setPublications] = useState<PublicationDTO[]>([]);
+    const [timeline, setTimeline] = useState<TimelineDTO | undefined>(undefined);
     const [challengeHistorique, setChallengeHistorique] = useState<ChallengeHistoriqueDTO | undefined>();
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -35,8 +28,9 @@ const Timeline: React.FC = () => {
             return;
         }
         try {
-            const data: PublicationDTO[] = await getTimeline(keycloak.token);
-            setPublications(data);
+            const data: TimelineDTO = await getTimeline(keycloak.token);
+            setTimeline(data);
+            setPublications(data.content);
         } catch (err) {
             console.log(err)
             setErreur("Erreur lors de la récupération de la timeline");
@@ -121,8 +115,8 @@ const Timeline: React.FC = () => {
                             key={publication.id}
                             cover={
                                 <img
-                                    alt={publication.description}
-                                    src={API_URL + "/images/" + publication.photo}
+                                    alt={publication.content}
+                                    src={API_URL + "/images/" + publication.image_id}
                                     className="object-cover w-full h-64"
                                 />
                             }
@@ -133,13 +127,13 @@ const Timeline: React.FC = () => {
                                         <HeartOutlined/>}
                                     onClick={() => handleLike(publication.id)}
                                 >
-                                    {publication.nombreLikes} likes
+                                    {publication.likeUtilisateur || 0} likes
                                 </Button>
                             ]}
                         >
                             <Card.Meta
-                                title={publication.auteur}
-                                description={publication.description}
+                                title={publication.author.pseudo}
+                                description={publication.content}
                             />
                         </Card>
                     ))}

@@ -1,9 +1,11 @@
+import {UtilisateurDTO} from "./UtilisateurDTO.ts";
+
 export interface PublicationDTO {
     id: string
-    datePublication: Date | undefined
-    description: string
-    auteur: string
-    photo: number
-    nombreLikes: number
+    author: UtilisateurDTO,
+    challenge_id: string,
+    published_at: Date | undefined
+    content: string
+    image_id: number
     likeUtilisateur: boolean
 }
