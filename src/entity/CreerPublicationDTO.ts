@@ -1,5 +1,4 @@
 export interface CreerPublicationDTO {
-    "idPhoto": number
-    "description": string
-    "datePublication": string
+    "image_id": number
+    "content": string
 }
