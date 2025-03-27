@@ -1,8 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Avatar, Card, Typography, Button, Calendar, Modal} from 'antd';
+import {Avatar, Card, Typography, Button, Modal} from 'antd';
 import {Settings, LogOut, Camera, X} from 'lucide-react';
 import {motion} from 'framer-motion';
-import type {Dayjs} from 'dayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 import {useKeycloak} from "@react-keycloak/web";
@@ -22,7 +21,7 @@ const Profile: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [selectedPublication, setSelectedPublication] = useState<SimplePublicationDTO | null>(null);
-    const [profile, setProfile] = useState<ProfileDTO>();
+    const [profile, setProfile] = useState<ProfileDTO>(undefined);
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
     const [publications, setPublications] = useState<SimplePublicationDTO[]>([]);
@@ -97,23 +96,24 @@ const Profile: React.FC = () => {
         >
             <Card className="mb-4">
                 <div className="flex items-center space-x-4">
-                    <div
-                        className="relative cursor-pointer"
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                        onClick={handleAvatarClick}
-                    >
-                        <Avatar
-                            size={64}
-                            src={API_URL + "/images/" + profile?.avatar}
-                        />
-                        {isHovered && (
-                            <div
-                                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
-                                <Camera size={24} className="text-white"/>
-                            </div>
-                        )}
-                    </div>
+                    {profile ?
+                        <div
+                            className="relative cursor-pointer"
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                            onClick={handleAvatarClick}
+                        >
+                            <Avatar
+                                size={64}
+                                src={API_URL + "/images/" + profile?.avatar}
+                            />
+                            {isHovered && (
+                                <div
+                                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                                    <Camera size={24} className="text-white"/>
+                                </div>
+                            )}
+                        </div> : null}
                     <div className="flex-1">
                         <Title level={4} className="m-0">
                             {profile ? profile?.prenom + " " + profile?.nom.toUpperCase() : 'Chargement...'}
