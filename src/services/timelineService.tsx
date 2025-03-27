@@ -5,8 +5,8 @@ import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
 
 export const getTimeline = async (token?: string): Promise<TimelineDTO> => {
     try {
-        const response = await apiClient(token).get<TimelineDTO>("/timeline");
-        return response.data;
+        const response = await apiClient(token).get<ReponseAPI<TimelineDTO>>("/timeline");
+        return response.data.contenu;
     } catch (e) {
         console.error("Erreur lors de la récupération de la timeline", e);
         throw e;
