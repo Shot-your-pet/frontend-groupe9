@@ -65,9 +65,9 @@ const Shooter: React.FC = () => {
                 setLoadingCreationPublication(true);
                 if (idPhotoPrise) {
                     const creerPublication: CreerPublicationDTO = {
-                        idPhoto: idPhotoPrise,
-                        datePublication: new Date().toISOString(),
-                        description: description
+                        image_id: idPhotoPrise,
+                        // datePublication: new Date().toISOString(),
+                        content: description
                     }
                     const success = await posterPublication(creerPublication, keycloak.token);
                     if (success) {
