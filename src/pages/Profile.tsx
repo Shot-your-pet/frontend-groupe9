@@ -104,10 +104,12 @@ const Profile: React.FC = () => {
                         onClick={handleAvatarClick}
                     >
 
-                        <Avatar
-                            size={64}
-                            src={profile?.avatar ? `${API_URL}/images/${profile.avatar}` : undefined}
-                        />
+                        {profile && (
+                            <Avatar
+                                size={64}
+                                src={profile.avatar ? `${API_URL}/images/${profile.avatar}` : undefined}
+                            />
+                        )}
                         {isHovered && (
                             <div
                                 className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
