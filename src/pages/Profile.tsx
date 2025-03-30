@@ -96,24 +96,25 @@ const Profile: React.FC = () => {
         >
             <Card className="mb-4">
                 <div className="flex items-center space-x-4">
-                    {profile?.avatar ?
-                        <div
-                            className="relative cursor-pointer"
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
-                            onClick={handleAvatarClick}
-                        >
-                            <Avatar
-                                size={64}
-                                src={API_URL + "/images/" + profile?.avatar}
-                            />
-                            {isHovered && (
-                                <div
-                                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
-                                    <Camera size={24} className="text-white"/>
-                                </div>
-                            )}
-                        </div> : null}
+
+                    <div
+                        className="relative cursor-pointer"
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        onClick={handleAvatarClick}
+                    >
+
+                        <Avatar
+                            size={64}
+                            src={profile?.avatar ? `${API_URL}/images/${profile?.avatar}` : undefined}
+                        />
+                        {isHovered && (
+                            <div
+                                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                                <Camera size={24} className="text-white"/>
+                            </div>
+                        )}
+                    </div>
                     <div className="flex-1">
                         <Title level={4} className="m-0">
                             {profile ? profile?.prenom + " " + profile?.nom.toUpperCase() : 'Chargement...'}
