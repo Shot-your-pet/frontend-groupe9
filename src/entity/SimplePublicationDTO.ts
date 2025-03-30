@@ -1,6 +1,6 @@
 export interface SimplePublicationDTO {
     datePublication: Date,
-    image: bigint
+    image: string
     description: string
     nombreLike: number
 }

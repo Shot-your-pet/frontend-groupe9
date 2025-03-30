@@ -116,7 +116,7 @@ const Timeline: React.FC = () => {
                             cover={
                                 <img
                                     alt={publication.content}
-                                    src={API_URL + "/images/" + publication.image_id.toString()}
+                                    src={API_URL + "/images/" + BigInt(publication.image_id).toString()}
                                     className="object-cover w-full h-64"
                                 />
                             }
@@ -133,7 +133,11 @@ const Timeline: React.FC = () => {
                         >
                             <Card.Meta
                                 title={publication.author.pseudo}
-                                description={publication.content}
+                                description={publication.content + '\n publié à ' + new Date(publication.published_at || "").toLocaleTimeString('fr-FR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false,
+                                })}
                             />
                         </Card>
                     ))}

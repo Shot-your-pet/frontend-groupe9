@@ -1,5 +1,5 @@
 export interface UtilisateurDTO {
     id: string,
     pseudo: string,
-    avatar_id: bigint
+    avatar_id: string
 }

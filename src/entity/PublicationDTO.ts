@@ -6,6 +6,6 @@ export interface PublicationDTO {
     challenge_id: string,
     published_at: Date | undefined
     content: string
-    image_id: bigint
+    image_id: string
     likeUtilisateur: boolean
 }

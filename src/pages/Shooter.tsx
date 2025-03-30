@@ -16,7 +16,7 @@ const {TextArea} = Input;
 const Shooter: React.FC = () => {
     const navigate = useNavigate();
     const [photo, setPhoto] = useState<string | null>(null);
-    const [idPhoto, setIdPhoto] = useState<bigint | undefined>(undefined);
+    const [idPhoto, setIdPhoto] = useState<string | undefined>(undefined);
     const [description, setDescription] = useState('');
     const webcamRef = React.useRef<Webcam>(null);
     const [challengeHistorique, setChallengeHistorique] = useState<ChallengeHistoriqueDTO | undefined>();
@@ -59,8 +59,6 @@ const Shooter: React.FC = () => {
                     const blob = await response.blob();
                     const file = new File([blob], 'photo.jpg', {type: 'image/jpeg'});
                     idPhotoPrise = await savePhoto(file, keycloak.token);
-                    console.log(typeof idPhotoPrise)
-                    console.log(idPhotoPrise)
                     setIdPhoto(idPhotoPrise);
                 }
                 setLoadingEnvoiePhoto(false);

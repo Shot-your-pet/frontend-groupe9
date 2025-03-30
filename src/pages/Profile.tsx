@@ -30,8 +30,8 @@ const Profile: React.FC = () => {
 
     const loadProfile = async () => {
         try {
-            const data: ProfileDTO = await getProfileUtilisateur(keycloak.token);
-            setProfile(data);
+            // const data: ProfileDTO = ;
+            setProfile(await getProfileUtilisateur(keycloak.token));
         } catch (err) {
             console.log(err)
             setErreur("Erreur lors de la récupération du profile");
@@ -79,7 +79,7 @@ const Profile: React.FC = () => {
                 // Appel de votre service pour mettre à jour la photo de profil
                 const newAvatar = await savePhoto(file, keycloak.token);
                 // Par exemple, on met à jour le profile avec la nouvelle image
-                setProfile((prev) => prev ? {...prev, avatar: newAvatar} : prev);
+                setProfile((prev) => prev ? {...prev, avatar: newAvatar.toString()} : prev);
                 console.log("Nouvelle photo de profil enregistrée :", newAvatar);
             } catch (error) {
                 console.error("Erreur lors de la mise à jour de la photo de profil", error);
@@ -103,13 +103,14 @@ const Profile: React.FC = () => {
                         onMouseLeave={() => setIsHovered(false)}
                         onClick={handleAvatarClick}
                     >
-                        <p>Avatar {profile?.avatar.toString()}</p>
                         {profile && (
-                            <Avatar
-                                size={64}
-                                key={profile.avatar}
-                                src={profile.avatar ? `${API_URL}/images/${profile.avatar.toString()}` : undefined}
-                            />
+                            <>
+                                <Avatar
+                                    size={64}
+                                    key={profile?.idAvatar}
+                                    src={profile?.idAvatar ? `${API_URL}/images/${BigInt(profile?.idAvatar)}` : undefined}
+                                />
+                            </>
                         )}
                         {isHovered && (
                             <div

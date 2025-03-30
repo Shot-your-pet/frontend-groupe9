@@ -1,3 +1,3 @@
 export interface IdPhotoDTO {
-    idPhoto: bigint
+    idPhoto: string
 }

@@ -5,6 +5,6 @@ export interface ProfileDTO {
     nom: string
     email: string
     derniereConnexion: Date | undefined
-    avatar: bigint
+    idAvatar: string
     membreDepuis: Date | undefined
 }
