@@ -59,13 +59,15 @@ const Shooter: React.FC = () => {
                     const blob = await response.blob();
                     const file = new File([blob], 'photo.jpg', {type: 'image/jpeg'});
                     idPhotoPrise = await savePhoto(file, keycloak.token);
+                    console.log(typeof idPhotoPrise)
+                    console.log(idPhotoPrise)
                     setIdPhoto(idPhotoPrise);
                 }
                 setLoadingEnvoiePhoto(false);
                 setLoadingCreationPublication(true);
                 if (idPhotoPrise) {
                     const creerPublication: CreerPublicationDTO = {
-                        image_id: idPhotoPrise,
+                        image_id: idPhotoPrise.toString(),
                         // datePublication: new Date().toISOString(),
                         content: description
                     }

@@ -103,10 +103,11 @@ const Profile: React.FC = () => {
                         onMouseLeave={() => setIsHovered(false)}
                         onClick={handleAvatarClick}
                     >
-
+                        <p>Avatar {profile?.avatar.toString()}</p>
                         {profile && (
                             <Avatar
                                 size={64}
+                                key={profile.avatar}
                                 src={profile.avatar ? `${API_URL}/images/${profile.avatar}` : undefined}
                             />
                         )}
