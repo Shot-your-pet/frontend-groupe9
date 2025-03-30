@@ -116,7 +116,7 @@ const Timeline: React.FC = () => {
                             cover={
                                 <img
                                     alt={publication.content}
-                                    src={API_URL + "/images/" + publication.image_id}
+                                    src={API_URL + "/images/" + publication.image_id.toString()}
                                     className="object-cover w-full h-64"
                                 />
                             }

@@ -108,7 +108,7 @@ const Profile: React.FC = () => {
                             <Avatar
                                 size={64}
                                 key={profile.avatar}
-                                src={profile.avatar ? `${API_URL}/images/${profile.avatar}` : undefined}
+                                src={profile.avatar ? `${API_URL}/images/${profile.avatar.toString()}` : undefined}
                             />
                         )}
                         {isHovered && (
