@@ -13,7 +13,7 @@ export const posterPublication = async (creerPublication: CreerPublicationDTO, t
     }
 }
 
-export const savePhoto = async (photo: File, token?: string): Promise<number> => {
+export const savePhoto = async (photo: File, token?: string): Promise<bigint> => {
     try {
         const formData = new FormData();
         formData.append("file", photo);

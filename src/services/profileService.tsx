@@ -14,7 +14,7 @@ export const getProfileUtilisateur = async (token?: string): Promise<ProfileDTO>
     }
 }
 
-export const savePhoto = async (avatar: File, token?: string): Promise<number> => {
+export const savePhoto = async (avatar: File, token?: string): Promise<bigint> => {
     try {
         const formData = new FormData();
         formData.append("file", avatar);

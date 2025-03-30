@@ -21,7 +21,7 @@ const Profile: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [selectedPublication, setSelectedPublication] = useState<SimplePublicationDTO | null>(null);
-    const [profile, setProfile] = useState<ProfileDTO>(undefined);
+    const [profile, setProfile] = useState<ProfileDTO | undefined>(undefined);
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
     const [publications, setPublications] = useState<SimplePublicationDTO[]>([]);
@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
         >
             <Card className="mb-4">
                 <div className="flex items-center space-x-4">
-                    {profile ?
+                    {profile?.avatar ?
                         <div
                             className="relative cursor-pointer"
                             onMouseEnter={() => setIsHovered(true)}

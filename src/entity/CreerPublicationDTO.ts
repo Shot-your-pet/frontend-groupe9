@@ -1,4 +1,4 @@
 export interface CreerPublicationDTO {
-    "image_id": number
+    image_id: bigint
     "content": string
 }

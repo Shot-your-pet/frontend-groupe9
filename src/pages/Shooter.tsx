@@ -16,7 +16,7 @@ const {TextArea} = Input;
 const Shooter: React.FC = () => {
     const navigate = useNavigate();
     const [photo, setPhoto] = useState<string | null>(null);
-    const [idPhoto, setIdPhoto] = useState<number | undefined>(undefined);
+    const [idPhoto, setIdPhoto] = useState<bigint | undefined>(undefined);
     const [description, setDescription] = useState('');
     const webcamRef = React.useRef<Webcam>(null);
     const [challengeHistorique, setChallengeHistorique] = useState<ChallengeHistoriqueDTO | undefined>();
