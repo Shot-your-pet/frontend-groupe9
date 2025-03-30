@@ -21,7 +21,7 @@ const Profile: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [selectedPublication, setSelectedPublication] = useState<SimplePublicationDTO | null>(null);
-    const [profile, setProfile] = useState<ProfileDTO | undefined>(undefined);
+    const [profile, setProfile] = useState<ProfileDTO | null>(null);
     const [erreur, setErreur] = useState<string | null>();
     const [loading, setLoading] = useState<boolean>(false);
     const [publications, setPublications] = useState<SimplePublicationDTO[]>([]);
@@ -106,7 +106,7 @@ const Profile: React.FC = () => {
 
                         <Avatar
                             size={64}
-                            src={profile?.avatar ? `${API_URL}/images/${profile?.avatar}` : undefined}
+                            src={profile?.avatar ? `${API_URL}/images/${profile.avatar}` : undefined}
                         />
                         {isHovered && (
                             <div

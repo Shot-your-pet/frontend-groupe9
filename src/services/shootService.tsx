@@ -25,7 +25,8 @@ export const savePhoto = async (photo: File, token?: string): Promise<bigint> =>
                 'Content-Type': 'multipart/form-data',
             }
         });
-        return response.data.contenu.idPhoto;
+        const idPhoto = BigInt(response.data.contenu.idPhoto);
+        return idPhoto;
     } catch (e) {
         console.error("Erreur lors de l'enregistrement de l'image'", e);
         throw e;

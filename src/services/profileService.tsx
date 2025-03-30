@@ -27,9 +27,6 @@ export const savePhoto = async (avatar: File, token?: string): Promise<bigint> =
             }
         });
         const idPhoto = BigInt(response.data.contenu.idPhoto);
-        console.log(idPhoto);
-        console.log(typeof response.data.contenu.idPhoto);
-        console.log(response.data.contenu.idPhoto);
         return idPhoto;
     } catch (e) {
         console.error("Erreur lors de l'enregistrement de la photo de profile", e);
