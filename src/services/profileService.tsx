@@ -26,6 +26,8 @@ export const savePhoto = async (avatar: File, token?: string): Promise<number> =
                 'Content-Type': 'multipart/form-data',
             }
         });
+        console.log(response.data);
+        console.log(response.data.contenu.idPhoto);
         return response.data.contenu.idPhoto;
     } catch (e) {
         console.error("Erreur lors de l'enregistrement de la photo de profile", e);
