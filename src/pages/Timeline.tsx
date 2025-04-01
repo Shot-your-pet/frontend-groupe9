@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Button, Typography} from 'antd';
+import {Button, Card, Typography} from 'antd';
 import {Camera} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
-import {HeartOutlined, HeartFilled} from '@ant-design/icons';
+import {HeartFilled, HeartOutlined} from '@ant-design/icons';
 import {PublicationDTO} from "../entity/PublicationDTO.ts";
 import {getDernierChallenge, getTimeline} from "../services/timelineService.tsx";
 import {ChallengeHistoriqueDTO} from "../entity/ChallengeHistoriqueDTO.ts";
-import {API_URL} from "../constantes.ts";
+import {API_URL, VAPID_PUBLIC_KEY} from "../constantes.ts";
 import {useKeycloak} from "@react-keycloak/web";
 import {TimelineDTO} from "../entity/TimelineDTO.ts";
+import {askNotificationPermission, registerServiceWorker, subscribeUser} from "../services/notificationsService.tsx";
 
 
 const {Title, Text} = Typography;
@@ -56,9 +57,31 @@ const Timeline: React.FC = () => {
     }
 
     useEffect(() => {
+        init()
         loadTimeline();
         loadChallenge();
     }, [])
+
+    const init = async () => {
+        await unregisterServiceWorker();
+        const registration = await registerServiceWorker();
+        if (registration) {
+            const permission = await askNotificationPermission();
+            if (permission === 'granted') {
+                await subscribeUser(registration, VAPID_PUBLIC_KEY, keycloak?.token);
+            }
+        }
+    };
+
+    async function unregisterServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+                await registration.unregister();
+            }
+            console.log('Service Worker désenregistré avec succès.');
+        }
+    }
 
     const handleLike = (postId: string) => {
         // setPosts(posts.map(post => {

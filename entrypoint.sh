@@ -20,5 +20,9 @@ if [ -n "$KEYCLOAK_CLIENT_ID" ]; then
   echo "Remplacement du placeholder pour KEYCLOAK_CLIENT_ID par $KEYCLOAK_CLIENT_ID"
   find $BUILD_DIR -type f -exec sed -i "s|VITE_KEYCLOAK_CLIENT_ID|${KEYCLOAK_CLIENT_ID}|g" {} \;
 fi
+if [ -n "$VAPID_PUBLIC_KEY" ]; then
+  echo "Remplacement du placeholder pour VAPID_PUBLIC_KEY par $VAPID_PUBLIC_KEY"
+  find $BUILD_DIR -type f -exec sed -i "s|VITE_VAPID_PUBLIC_KEY|${VAPID_PUBLIC_KEY}|g" {} \;
+fi
 
 exec "$@"

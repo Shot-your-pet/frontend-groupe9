@@ -1,8 +1,8 @@
-import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
+import {registerServiceWorker} from "./services/notificationsService.tsx";
 
 createRoot(document.getElementById('root')!).render(
     // <StrictMode>
@@ -11,3 +11,7 @@ createRoot(document.getElementById('root')!).render(
     </ErrorBoundary>
     // </StrictMode>
 );
+
+(async () => {
+    await registerServiceWorker();
+})();
