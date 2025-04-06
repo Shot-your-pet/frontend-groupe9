@@ -168,7 +168,8 @@ const Profile: React.FC = () => {
                                 style={{
                                     height: '100%',
                                     position: 'relative',
-                                    backgroundImage: shot ? `url(${API_URL + "/images/" + shot.image})` : undefined,
+                                    // backgroundImage: shot ? `url(${API_URL + "/images/" + shot.image})` : undefined,
+                                    backgroundImage: shot ? `url(${shot.image})` : undefined,
                                     backgroundSize: 'cover',
                                     aspectRatio: '1/1',
                                     backgroundPosition: 'center',
