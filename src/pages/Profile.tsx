@@ -47,19 +47,19 @@ const Profile: React.FC = () => {
                 {
                     datePublication: new Date("2025-04-04T00:00:00"),
                     image: "https://cataas.com/cat",
-                    description: "Description du jour",
+                    description: "On a pas eu le temps snifff :(",
                     nombreLike: 278
                 },
                 {
                     datePublication: new Date("2025-04-14T00:00:00"),
                     image: "https://cataas.com/cat",
-                    description: "Description du jour",
+                    description: "On a pas eu le temps d'implémenter cette fonctionnalité ...",
                     nombreLike: 58
                 },
                 {
                     datePublication: new Date("2025-04-27T00:00:00"),
                     image: "https://cataas.com/cat",
-                    description: "Description du jour",
+                    description: "Erreur 501 oups",
                     nombreLike: 1786
                 },
 
