@@ -42,7 +42,28 @@ const Profile: React.FC = () => {
 
     const loadHistoriquePublication = async () => {
         try {
-            const data: SimplePublicationDTO[] = await getHistoriqueParticipation(keycloak.token);
+            // const data: SimplePublicationDTO[] = await getHistoriqueParticipation(keycloak.token);
+            const data: SimplePublicationDTO[] = [
+                {
+                    datePublication: new Date("2025-04-04T00:00:00"),
+                    image: "https://cataas.com/cat",
+                    description: "Description du jour",
+                    nombreLike: 278
+                },
+                {
+                    datePublication: new Date("2025-04-14T00:00:00"),
+                    image: "https://cataas.com/cat",
+                    description: "Description du jour",
+                    nombreLike: 58
+                },
+                {
+                    datePublication: new Date("2025-04-27T00:00:00"),
+                    image: "https://cataas.com/cat",
+                    description: "Description du jour",
+                    nombreLike: 1786
+                },
+
+            ]
             setPublications(data);
         } catch (err) {
             console.log(err)
