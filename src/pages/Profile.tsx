@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
             const data: SimplePublicationDTO[] = [
                 {
                     datePublication: new Date("2025-04-04T00:00:00"),
-                    image: "https://cataas.com/cat",
+                    image: "https://random.imagecdn.app/600/500",
                     description: "On a pas eu le temps snifff :(",
                     nombreLike: 278
                 },
@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
                 },
                 {
                     datePublication: new Date("2025-04-27T00:00:00"),
-                    image: "https://cataas.com/cat",
+                    image: "https://random.imagecdn.app/500/400",
                     description: "Erreur 501 oups",
                     nombreLike: 1786
                 },
@@ -252,7 +252,7 @@ const Profile: React.FC = () => {
                     {selectedPublication && (
                         <>
                             <img
-                                src={API_URL + "/images/" + selectedPublication.image}
+                                src={selectedPublication.image}
                                 alt={`Photo du ${selectedPublication.datePublication}`}
                                 className="w-full rounded-lg"
                             />
